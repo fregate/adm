@@ -1,0 +1,31 @@
+html, body {
+    height: 100%;
+    background-image: url(/img/olivie_tile.jpeg);
+    scale: 50%;
+    background-position: left bottom;
+    background-repeat: repeat-x;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* font-family: 'Lobster', cursive; */
+}
+
+table {
+    background-color: white;
+    opacity: .95;
+}
+
+th {
+    padding-left: 10px;
+}
+
+.btncheck {
+    cursor: pointer;
+}
+
+.btnremove {
+    cursor: pointer;
+}
