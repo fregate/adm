@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Добро пожаловать в АДМ!</title>
+
+  <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Comfortaa:700&subset=latin,cyrillic' rel='stylesheet'
+    type='text/css'>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <link rel='stylesheet' href="/css/s.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg" style="background-color: rgba(163, 217, 255, 0.7);">
+    <a class="navbar-brand" href="/">ADM</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-div"
+      aria-controls="navbar-collapse-div" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse-div">
+      <ul class="navbar-nav mr-auto" id="nav-user-menu">
+        <li class="nav-item active" id="nav-participiants">
+          <a class="nav-link" href="/participiants.html">Участники</a>
+        </li>
+        <li class="nav-item" id="nav-adms">
+          <a class="nav-link" href="/adms.html">Магия</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" id="btn-no-auth">
+          <a class="btn btn-info" href="#" role="button" data-toggle="modal" data-target="#modal-auth">
+            Login
+          </a>
+        </li>
+        <li class="nav-item" id="btn-has-auth">
+          <a class="btn btn-info" href="#" role="button" id="btn-auth">
+            Name
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- page content -->
+  <div class="container main-list my-5">
+    <h1 class="display-4 text-center">Потенциальные Участники АДМ</h1>
+    <div class="list-group" id="ps-list"></div>
+  </div>
+
+  <div class="modal fade" id="modal-p-details" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCenterTitle">Об этом Деде Морозе</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="input-group mb-3">
+            <label for="p-name" class="input-group-prepend"><span class="input-group-text" id="user-title">Настоящее
+                имя</span></label>
+            <input type="text" class="form-control" id="p-name" placeholder="Имя" aria-describedby="user-title" required>
+          </div>
+          <div class="input-group mb-3">
+              <label for="p-email" class="input-group-prepend"><span class="input-group-text" id="form-email">Электо-почта</span></label>
+              <input type="email" class="form-control" id="p-email" placeholder="" aria-describedby="form-email" required>
+          </div>
+      
+          <div class="alert alert-danger" role="alert" id="p-error"></div>
+
+          <input type="hidden" id="p-id">
+
+          <div class="modal-confirmation">
+            Точно? <button type="button" class="btn btn-danger" id="confirmation-button">Ага</button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger mr-auto" id="p-remove-button">Удалить</button>
+          <button type="button" class="btn btn-outline-secondary ml-right" data-dismiss="modal">Закрыть</button>
+          <button type="button" class="btn btn-primary ml-right" id="p-update-button">Обновить</button>
+          <button type="button" class="btn btn-success ml-right" id="p-add-button">Добавить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end page content -->
+
+  <div class="modal fade" id="modal-auth" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCenterTitle">Authentification</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="auth-email">Email address</label>
+            <input type="email" class="form-control" id="auth-email" aria-describedby="emailHelp"
+              placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="auth-password">Password</label>
+            <input type="password" class="form-control" id="auth-password" placeholder="Password">
+          </div>
+          <div class="alert alert-danger" role="alert" id="auth-error"></div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary ml-right" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary ml-right" id="auth-login-button">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="/__/firebase/7.5.2/firebase-app.js"></script>
+<script src="/__/firebase/7.5.2/firebase-auth.js"></script>
+<script src="/__/firebase/7.5.2/firebase-firestore.js"></script>
+<!-- initialize the SDK after all desired features are loaded -->
+<script src="/__/firebase/init.js"></script>
+<script src="/js/login.js"></script>
+
+<script src="/js/p.js"></script>
+
+<script>
+  $('#modal-p-details').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var name = button.data('name')
+    var email = button.data('email')
+    var id = button.data('uid');
+    var modal = $(this)
+    modal.find('.modal-confirmation').hide();
+    modal.find('#p-name').val(name);
+    modal.find('#p-email').val(email);
+    modal.find('#p-id').val(id);
+    if (id == undefined) {
+      modal.find('#p-add-button').show();
+      modal.find('#p-update-button').hide();
+      modal.find('#p-remove-button').hide();
+    } else {
+      modal.find('#p-add-button').hide();
+      modal.find('#p-update-button').show();
+      modal.find('#p-remove-button').show();
+    }
+    $("#p-error").hide();
+  });
+
+</script>
+
+
+</html>

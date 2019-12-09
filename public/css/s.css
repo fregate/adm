@@ -29,3 +29,20 @@ th {
 .btnremove {
     cursor: pointer;
 }
+
+.modal-body > .modal-confirmation {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    padding: 1em 2em 3em 1em;
+    background-color: white;
+}
+
+.main-list {
+    background-color: rgba(255, 255, 255, 0.75);
+    padding: 7pt;
+    border-radius: 3pt;
+}
