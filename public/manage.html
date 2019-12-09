@@ -22,10 +22,10 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse-div">
       <ul class="navbar-nav mr-auto" id="nav-user-menu">
-        <li class="nav-item active" id="nav-participiants">
+        <li class="nav-item" id="nav-participiants">
           <a class="nav-link" href="/participiants.html">Участники</a>
         </li>
-        <li class="nav-item" id="nav-adms">
+        <li class="nav-item active" id="nav-adms">
           <a class="nav-link" href="/adms.html">Магия</a>
         </li>
       </ul>
@@ -46,51 +46,33 @@
   </nav>
 
   <!-- page content -->
-  <div class="container main-list my-5">
-    <h1 class="display-4 text-center">Потенциальные Участники АДМ</h1>
-    <div class="list-group" id="ps-list"></div>
+  <div class="container mt-2">
+    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#modal-add-users">Выбрать участников</button>
+    <div class="my-2"></div>
   </div>
 
-  <div class="modal fade" id="modal-p-details" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
+  <div class="modal fade" id="modal-add-users" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalCenterTitle">Об этом Деде Морозе</h5>
+          <h5 class="modal-title" id="modalCenterTitle">Выбрать участников</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
 
-          <div class="input-group mb-3">
-            <label for="p-name" class="input-group-prepend"><span class="input-group-text" id="user-title">Настоящее
-                имя</span></label>
-            <input type="text" class="form-control" id="p-name" placeholder="Имя" aria-describedby="user-title" required>
-          </div>
-          <div class="input-group mb-3">
-              <label for="p-email" class="input-group-prepend"><span class="input-group-text" id="form-email">Электо-почта</span></label>
-              <input type="email" class="form-control" id="p-email" placeholder="" aria-describedby="form-email" required>
-          </div>
-      
-          <div class="alert alert-danger" role="alert" id="p-error"></div>
-
-          <input type="hidden" id="p-id">
-
-          <div class="modal-confirmation">
-            Точно? <button type="button" class="btn btn-danger" id="confirmation-button">Ага</button>
-          </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger mr-auto" id="p-remove-button">Удалить</button>
           <button type="button" class="btn btn-outline-secondary ml-right" data-dismiss="modal">Закрыть</button>
-          <button type="button" class="btn btn-primary ml-right" id="p-update-button">Обновить</button>
-          <button type="button" class="btn btn-success ml-right" id="p-add-button">Добавить</button>
+          <button type="button" class="btn btn-primary ml-right" id="ok-button">Ok</button>
         </div>
       </div>
     </div>
   </div>
+
   <!-- end page content -->
 
   <div class="modal fade" id="modal-auth" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
@@ -131,6 +113,7 @@
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
   integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="/js/jquery.cookie.js"></script>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="/__/firebase/7.5.2/firebase-app.js"></script>
@@ -140,32 +123,6 @@
 <script src="/__/firebase/init.js"></script>
 <script src="/js/login.js"></script>
 
-<script src="/js/p.js"></script>
-
-<script>
-  $('#modal-p-details').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var name = button.data('name')
-    var email = button.data('email')
-    var id = button.data('uid');
-    var modal = $(this)
-    modal.find('.modal-confirmation').hide();
-    modal.find('#p-name').val(name);
-    modal.find('#p-email').val(email);
-    modal.find('#p-id').val(id);
-    if (id == undefined) {
-      modal.find('#p-add-button').show();
-      modal.find('#p-update-button').hide();
-      modal.find('#p-remove-button').hide();
-    } else {
-      modal.find('#p-add-button').hide();
-      modal.find('#p-update-button').show();
-      modal.find('#p-remove-button').show();
-    }
-    $("#p-error").hide();
-  });
-
-</script>
-
+<script src="/js/manage.js"></script>
 
 </html>

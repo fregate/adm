@@ -6,10 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Добро пожаловать в АДМ!</title>
 
-  <link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Comfortaa:700&subset=latin,cyrillic' rel='stylesheet'
-    type='text/css'>
-
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -134,6 +130,7 @@
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
   integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="/js/jquery.cookie.js"></script>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="/__/firebase/7.5.2/firebase-app.js"></script>
@@ -150,7 +147,7 @@
     var button = $(event.relatedTarget) // Button that triggered the modal
     var name = button.data('name')
     var email = button.data('email')
-    var id = button.data('uid');
+    var id = button.data('admid');
     var modal = $(this)
     modal.find('.modal-confirmation').hide();
     modal.find('#adm-name').val(name);
@@ -166,8 +163,6 @@
     }
     $("#adm-error").hide();
   });
-
 </script>
-
 
 </html>

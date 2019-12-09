@@ -1,4 +1,9 @@
 
+var createMagick = (id) => {
+    $.cookie('currentAdm', id);
+    window.location.href='manage.html';
+}
+
 var refreshCollection = user => {
     $('#adm-list').hide();
     $('#adm-list').empty();
@@ -14,13 +19,15 @@ var refreshCollection = user => {
         </button>`);
 
         snapshot.forEach(doc => {
+            var btnId = "adm-" + doc.id;
             $("#adm-list").append(
-                `<button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#modal-adm-details"
+                `<div class="list-group-item list-group-item-action btn-group d-flex" role="group">
+                <button type="button" class="btn w-100" data-admid="${doc.id}" id="${btnId}">${doc.data().name}</button>
+                <button type="button" class="btn-primary btn flex-shrink-1" data-toggle="modal" data-target="#modal-adm-details"
                 data-name="${doc.data().name}"
-                data-uid="${doc.id}">
-                ${doc.data().name}
-                </button>`
-            );
+                data-admid="${doc.id}" title="Редактировать">#</button>
+                </div>`);
+            $("#adm-list").find("#" + btnId).on('click', () => { createMagick(doc.id); });
         });
 
         $('#adm-list').show();
@@ -78,6 +85,7 @@ var addAdm = () => {
     var db = firebase.firestore();
     db.collection("adms").add({
         name: modal.find('#adm-name').val(),
+        archive: false,
         created: (new Date).getTime(),
         updated: (new Date).getTime()
     }).then(d => {
