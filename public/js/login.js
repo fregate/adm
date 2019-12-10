@@ -35,10 +35,12 @@ var onAuthStateChanged = (user) => {
         $('#btn-no-auth').hide();
         $('#btn-auth').text('Hi, ' + name + "!");
         $('#nav-user-menu').show();
+        $('#nav-settings').show();
     } else {
         $('#btn-has-auth').hide();
         $('#btn-no-auth').show();
         $('#nav-user-menu').hide();
+        $('#nav-settings').hide();
     }
 };
 

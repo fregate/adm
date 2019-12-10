@@ -29,8 +29,13 @@
           <a class="nav-link" href="/adms.html">Магия</a>
         </li>
       </ul>
+      <ul class="navbar-nav ml-auto" id="nav-settings">
+        <li class="nav-item" id="nav-settigns">
+          <a class="nav-link" href="/settings.html">Настройки</a>
+        </li>
+      </ul>
 
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav">
         <li class="nav-item" id="btn-no-auth">
           <a class="btn btn-info" href="#" role="button" data-toggle="modal" data-target="#modal-auth">
             Login
@@ -43,6 +48,7 @@
         </li>
       </ul>
     </div>
+
   </nav>
 
   <!-- page content -->
@@ -66,13 +72,15 @@
           <div class="input-group mb-3">
             <label for="p-name" class="input-group-prepend"><span class="input-group-text" id="user-title">Настоящее
                 имя</span></label>
-            <input type="text" class="form-control" id="p-name" placeholder="Имя" aria-describedby="user-title" required>
+            <input type="text" class="form-control" id="p-name" placeholder="Имя" aria-describedby="user-title"
+              required>
           </div>
           <div class="input-group mb-3">
-              <label for="p-email" class="input-group-prepend"><span class="input-group-text" id="form-email">Электо-почта</span></label>
-              <input type="email" class="form-control" id="p-email" placeholder="" aria-describedby="form-email" required>
+            <label for="p-email" class="input-group-prepend"><span class="input-group-text"
+                id="form-email">Электо-почта</span></label>
+            <input type="email" class="form-control" id="p-email" placeholder="" aria-describedby="form-email" required>
           </div>
-      
+
           <div class="alert alert-danger" role="alert" id="p-error"></div>
 
           <input type="hidden" id="p-id">
