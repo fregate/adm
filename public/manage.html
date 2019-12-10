@@ -47,13 +47,14 @@
 
   <!-- page content -->
   <div class="container mt-2">
-    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#modal-add-users">Выбрать участников</button>
+    <button id="select-users-btn" type="button" class="btn btn-light" data-toggle="modal" data-target="#modal-add-users"
+      disabled>Выбрать участников</button>
     <div class="my-2"></div>
   </div>
 
   <div class="modal fade" id="modal-add-users" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalCenterTitle">Выбрать участников</h5>
@@ -62,10 +63,12 @@
           </button>
         </div>
         <div class="modal-body">
-
+          <div class="list-group" id="user-list"></div>
         </div>
 
         <div class="modal-footer">
+          <button type="button" class="btn btn-info" id="select-all-button">+</button>
+          <button type="button" class="btn btn-info mr-auto" id="clear-all-button">-</button>
           <button type="button" class="btn btn-outline-secondary ml-right" data-dismiss="modal">Закрыть</button>
           <button type="button" class="btn btn-primary ml-right" id="ok-button">Ok</button>
         </div>
@@ -124,5 +127,11 @@
 <script src="/js/login.js"></script>
 
 <script src="/js/manage.js"></script>
+
+<script>
+  $('#modal-add-users').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+  });
+</script>
 
 </html>
