@@ -1,4 +1,7 @@
 var U = [];
+var S = [];
+
+var ADM;
 
 var fetchUsers = user => {
     $("#select-users-btn").attr("disabled", "");
@@ -9,9 +12,9 @@ var fetchUsers = user => {
     var db = firebase.firestore();
     db.collection("users").get().then(snapshot => {
         snapshot.forEach(doc => {
-            U.push({name:doc.data().name, uid:doc.uid});
+            U.push({name:doc.data().name, uid:doc.id});
             $("#user-list").append(`
-            <div class="list-group-item list-group-item-action">
+            <div class="list-group-item list-group-item-action" data-uid="${doc.id}">
             ${doc.data().name}
             </div>
             `);
@@ -28,7 +31,27 @@ var fetchUsers = user => {
 };
 
 var refreshAdm = user => {
-    console.log($.cookie("currentAdm"));
+    var db = firebase.firestore();
+    db.collection("adms").doc(ADM).get()
+    .then(doc => {
+    })
+    .catch(error => {
+        console.log(`No document? Cookie='${$.cookie("currentAdm")}'. Error: ${error}`);
+    });
+};
+
+var buildField = () => {
+    S = [];
+    var modal = $('#modal-add-users');
+
+    $(".list-group .list-group-item").each((idx, elem) => {
+        if ($(elem).hasClass("active"))
+            S.push($(elem).data('uid'));
+    });
+
+    modal.modal('hide');
+
+    // update document with new users
 };
 
 firebase.auth().onAuthStateChanged((user) => {
@@ -47,4 +70,7 @@ $(document).ready(() => {
         $(".list-group .list-group-item").removeClass('active');
     });
 
+    $('#ok-button').on('click', buildField);
+
+    ADM = $.cookie("currentAdm");
 });
