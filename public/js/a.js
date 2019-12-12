@@ -1,7 +1,7 @@
 
 var createMagick = (id) => {
     $.cookie('currentAdm', id);
-    window.location.href='manage.html';
+    window.location.href='/manage.html';
 }
 
 var refreshCollection = user => {
@@ -22,7 +22,12 @@ var refreshCollection = user => {
             var btnId = "adm-" + doc.id;
             $("#adm-list").append(
                 `<div class="list-group-item list-group-item-action btn-group d-flex" role="group">
-                <button type="button" class="btn w-100" data-admid="${doc.id}" id="${btnId}">${doc.data().name}</button>
+                <button type="button" class="btn w-100" data-admid="${doc.id}" id="${btnId}">
+                    ${doc.data().name}
+                    <small class="${doc.data().good ? 'text-secondary' : 'text-danger'}">
+                        (${doc.data().participiants} участников)
+                    </small>
+                </button>
                 <button type="button" class="btn-primary btn flex-shrink-1" data-toggle="modal" data-target="#modal-adm-details"
                 data-name="${doc.data().name}"
                 data-admid="${doc.id}" title="Редактировать">#</button>
@@ -85,7 +90,10 @@ var addAdm = () => {
     var db = firebase.firestore();
     db.collection("adms").add({
         name: modal.find('#adm-name').val(),
-        archive: false,
+        completed: 0, // date of the adm raffle
+        good: false,
+        participiants: 0,
+        graph: {},
         created: (new Date).getTime(),
         updated: (new Date).getTime()
     }).then(d => {
