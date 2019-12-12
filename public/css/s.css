@@ -46,3 +46,17 @@ th {
     padding: 7pt;
     border-radius: 3pt;
 }
+
+.name-column {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.first-col-sticky {}
+
+.first-col-sticky th:first-child, td:first-child {
+  position:sticky;
+  left:0px;
+  background-color:#e0e0e0e5;
+}

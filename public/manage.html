@@ -52,9 +52,21 @@
 
   <!-- page content -->
   <div class="container mt-2">
-    <button id="select-users-btn" type="button" class="btn btn-light" data-toggle="modal" data-target="#modal-add-users"
-      disabled>Выбрать участников</button>
-    <div class="my-2 main-list" id="rules-field"></div>
+    <div class="d-flex flex-row">
+      <button id="select-users-button" type="button" class="btn btn-light" data-toggle="modal"
+        data-target="#modal-add-users" disabled>Выбрать участников</button>
+      <button type="button" class="btn btn-light ml-auto">Сохранить</button>
+    </div>
+    <div class="my-2 main-list table-responsive">
+      <table class="table table-sm first-col-sticky" id="rules-field">
+        <thead>
+          <tr>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="modal fade" id="modal-add-users" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
@@ -116,6 +128,8 @@
     </div>
   </div>
 </body>
+
+<script src="https://kit.fontawesome.com/62eabbd844.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
