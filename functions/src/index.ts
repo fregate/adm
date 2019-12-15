@@ -15,21 +15,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 admin.initializeApp(functions.config().firebase);
 
-interface User {
-    name:String,
-    email:String
-}
-
-export const doMagicka = functions.firestore.document('/run/{magic}').onCreate(async (snap, context) => {
+export const doMagicka = functions.firestore.document('/run/{magic}').onCreate((snap, context) => {
     console.log(">>>> doMagicka >>>", context.params.magic, snap.data());
-
     if (snap.data() === undefined) {
         console.error(">> No data!!! <<");
         return null;
     }
 
-    const c = snap.data().cycle;
-    if (c.lenght == 0) {
+    const cycle = snap.data()!.cycle;
+    if (cycle.length == 0) {
         console.error(">> Empty cycle!!! <<");
         return null;
     }
@@ -37,41 +31,37 @@ export const doMagicka = functions.firestore.document('/run/{magic}').onCreate(a
     let smtpTransport = mailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
-        secure: false, // upgrade later with STARTTLS
+        secure: true, // upgrade later with STARTTLS
         auth: {
         }
-      });
+    });
 
     const db = admin.firestore();
-    await db.collection("adms").doc(snap.data().adm).get()
+    return db.collection("adms").doc(snap.data()!.adm).get()
     .then(doc => {
+        console.log(">> Get adms doc", doc.data());
         return db.collection("users").get();
     })
-    .then(async snapshot => {
-        const findUser = (uid:String):User => {
-            let res:User = {name:"", email:""};
-            snapshot.forEach(element => {
-                if(res.name != "")
+    .then(userssnap => {
+        const findUser = (uid: string) => {
+            let res = { name: "", email: "" };
+            userssnap.forEach(element => {
+                if (res.name != "")
                     return;
-                if (element.data().uid == uid) {
+                if (element.id == uid) {
                     res.name = element.data().name;
                     res.email = element.data().email;
                 }
             });
             return res;
         };
-        let U = c[0];
-        for(let idx = 1; idx < c.lenght; idx++) {
-            const Sender:User = findUser(U);
-            const Reciever:User = findUser(c[0]);
+        const sendMessage = (from: string, to: string) => {
+            const Sender = findUser(from);
+            const Reciever = findUser(to);
             const t = `
-            Дорогой Анонимный Дед Мороз
-            ${Sender.name}
-            !!!
+            Дорогой Анонимный Дед Мороз ${Sender.name} !!!
 
-            Тебе достался практически случайный внук
-            ${Reciever.name}
-            !!!
+            Тебе достался практически случайный внук ${Reciever.name} !!!
 
             Порадуй его на предстоящей вечеринке!
 
@@ -83,18 +73,20 @@ export const doMagicka = functions.firestore.document('/run/{magic}').onCreate(a
                 subject: 'Сообщение для Анонимного Деда Мороза!',
                 text: t
             };
-            await smtpTransport.sendMail(message)
-            .then(res => {
-                console.log(">> Message sent <<", res);
-            })
-            .catch(error => {
-                console.error(">> Error when sending email <<", error);
-            });
+            return smtpTransport.sendMail(message)
         }
+
+        let P = [];
+        let U = cycle[0];
+        for (let idx = 1; idx < cycle.length; idx++) {
+            P.push(sendMessage(U, cycle[idx]));
+            U = cycle[idx];
+        }
+        P.push(sendMessage(U, cycle[0]));
+        return Promise.all(P);
     })
     .catch(error => {
         console.error(">> Can't fetch users!!!", error);
+        return null;
     });
-
-    return null;
 });
