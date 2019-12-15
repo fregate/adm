@@ -224,8 +224,6 @@ $(document).ready(() => {
 /////////////////////////////
 
 var Generate = function (G, ResultCallback) {
-    console.log(G);
-
     var nodes = Object.keys(G);
     var arrows = new Map();
     Object.entries(G).forEach(([n, edges]) => {
