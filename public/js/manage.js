@@ -82,7 +82,7 @@ var buildField = (S, G) => {
     $("#rules-field > tbody").empty();
     S.forEach(uid => {
         var getRow = () => {
-            var tds = `<th scope="row">${getUserName(U, uid)} ${uid}</th>`;
+            var tds = `<th scope="row">${getUserName(U, uid)}</th>`;
             S.forEach(u2 => {
                 if (u2 == uid) {
                     tds += `<td class="text-center align-middle">
@@ -203,7 +203,41 @@ $(document).ready(() => {
 // test
 /////////////////////////////
 
-var Generate = function (R) {
-    console.log(R);
-    return [];
+var Generate = function (G) {
+    console.log(G);
+
+    // buld nodes
+    var jg = new JGraph(Object.keys(G));
+    // build edges
+    Object.entries(G).forEach(([n, edges]) => {
+        jg.arrows.set(n, edges);
+    });
+
+    var ccc = jg.findCircuits(c => {
+        return c.length == jg.nodes.length;
+    });
+
+    // test
+    var bad = [];
+    for(var x = 0; x < ccc.length; x++) {
+        var c = ccc[x];
+        var U = c[0];
+        for(var y = 1; y < c.length; y++) {
+            if (!jg.arrows.get(U).includes(c[y])) {
+                bad.push(x);
+                break;
+            }
+            U = c[y];
+        }
+        if (!jg.arrows.get(U).includes(c[0])) {
+            bad.push(x);
+            continue;
+        }
+    }
+    
+    var result = ccc.filter((e, idx) => {
+        return !bad.includes(idx);
+    });
+
+    return result;
 };
