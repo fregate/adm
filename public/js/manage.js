@@ -1,6 +1,7 @@
 var U = [];
 
-var ADM;
+var ADM;    
+var CYCLES = [];
 
 var setCheckingResult = (state) => {
     $("#check-waiter").hide();
@@ -19,6 +20,13 @@ var setCheckingResult = (state) => {
     } else if (state < 0) { // waiting for results
         $("#check-result").hide();
         $("#check-waiter").show();
+    }
+
+    if (state >= 0) {
+        if (CYCLES.length > 0)
+            $("#check-result").removeAttr("disabled");
+        else
+            $("#check-result").attr("disabled", "");
     }
 };
 
@@ -48,6 +56,7 @@ var fetchData = user => {
         return db.collection("adms").doc(ADM).get();
     })
     .then(doc => {
+        CYCLES = [];
         var G = doc.data().graph;
         var S = Object.keys(G);
         S.forEach(uid => {
@@ -143,6 +152,11 @@ var buildField = (S, G) => {
 };
 
 var saveRules = () => {
+    if (firebase.auth().currentUser == null) {
+        console.error("No auth user!");
+        return;
+    }
+
     var uid = "";
     var rules = {};
     var row = [];
@@ -169,15 +183,16 @@ var saveRules = () => {
 
     $("#save-rules-button").attr("disabled", "");
 
+    CYCLES = [];
     setCheckingResult(-1);
     Generate(rules, e => {
-        var results = e.data;
-        console.log("num of results", results.length);
-        setCheckingResult(results.length);
+        CYCLES = e.data;
+        console.log("num of results", CYCLES.length);
+        setCheckingResult(CYCLES.length);
         var db = firebase.firestore();
         db.collection("adms").doc(ADM).update({
             participiants: Object.keys(rules).length,
-            good: results.length > 0,
+            good: CYCLES.length > 0,
             graph: rules,
             updated: (new Date).getTime()
         }).then(() => {
@@ -186,6 +201,29 @@ var saveRules = () => {
             console.error("Error updating document: ", error);
             $("#adm-error").show().text(`Error updating document: ${error}`);
         });
+    });
+};
+
+var doMagicka = () => {
+    if (CYCLES.length == 0) {
+        console.error("Empty CYCLES. Generate first!");
+        return;
+    }
+
+    if (firebase.auth().currentUser == null) {
+        console.error("No auth user!");
+        return;
+    }
+
+    var idx = Math.floor(Math.random() * CYCLES.length);
+    
+    var db = firebase.firestore();
+    db.collection("run").add({
+        cycle: CYCLES[idx],
+        adm: ADM,
+        date: (new Date).getTime()
+    }).catch((error) => {
+        console.error("Error creating document: ", error);
     });
 };
 
@@ -213,10 +251,10 @@ $(document).ready(() => {
     });
 
     $('#ok-button').on('click', selectUsers);
-
     $("#save-rules-button").on('click', saveRules);
-
     $("#check-waiter").hide();
+
+    $("#check-result").on('click', doMagicka);
 });
 
 /////////////////////////////
