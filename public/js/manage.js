@@ -2,6 +2,26 @@ var U = [];
 
 var ADM;
 
+var setCheckingResult = (state) => {
+    $("#check-waiter").hide();
+    if(state == 0) { // no good graph
+        $("#check-result").empty();
+        $("#check-result").append(`<i class="fas fa-thumbs-down"></i>`);
+        $("#check-result").removeClass(`bg-success`);
+        $("#check-result").addClass(`bg-danger`);
+        $("#check-result").show();
+    } else if (state > 0) { // positive graphs
+        $("#check-result").empty();
+        $("#check-result").append(`<i class="fas fa-thumbs-up"></i>`);
+        $("#check-result").removeClass(`bg-danger`);
+        $("#check-result").addClass(`bg-success`);
+        $("#check-result").show();
+    } else if (state < 0) { // waiting for results
+        $("#check-result").hide();
+        $("#check-waiter").show();
+    }
+};
+
 var fetchData = user => {
     $("#select-users-button").attr("disabled", "");
 
@@ -34,6 +54,7 @@ var fetchData = user => {
             $("#user-list").find(`[data-uid="${uid}"]`).addClass('active');
         });
         buildField(S, G);
+        setCheckingResult(doc.data().good ? 1 : 0);
     })
     .catch(error => {
         console.log(`Cookie='${$.cookie("currentAdm")}'. Error: ${error}`);
@@ -147,36 +168,33 @@ var saveRules = () => {
     rules[uid] = row;
 
     $("#save-rules-button").attr("disabled", "");
-    var db = firebase.firestore();
-    db.collection("adms").doc(ADM).update({
-        participiants: Object.keys(rules).length,
-        graph: rules,
-        updated: (new Date).getTime()
-    }).then(() => {
-        $("#save-rules-button").removeAttr("disabled");
-    }).catch((error) => {
-        console.error("Error updating document: ", error);
-        $("#adm-error").show().text(`Error updating document: ${error}`);
+
+    setCheckingResult(-1);
+    Generate(rules, e => {
+        var results = e.data;
+        console.log("num of results", results.length);
+        setCheckingResult(results.length);
+        var db = firebase.firestore();
+        db.collection("adms").doc(ADM).update({
+            participiants: Object.keys(rules).length,
+            good: results.length > 0,
+            graph: rules,
+            updated: (new Date).getTime()
+        }).then(() => {
+            $("#save-rules-button").removeAttr("disabled");
+        }).catch((error) => {
+            console.error("Error updating document: ", error);
+            $("#adm-error").show().text(`Error updating document: ${error}`);
+        });
     });
-
-    Generate(rules);
 };
 
-var rulesCheckUpdate = (data) => {
-    console.log(data);
-};
-
-var unsubscribe;
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-        var db = firebase.firestore();
-        unsubscribe = db.collection("adms").doc(ADM).onSnapshot(doc => {
-            rulesCheckUpdate(doc.data());
-        });
         fetchData(user);
     } else {
-        if (unsubscribe != undefined)
-            unsubscribe();
+        $("#rules-field > thead > tr").empty();
+        $("#rules-field > tbody").empty();
     }
 });
 
@@ -197,47 +215,31 @@ $(document).ready(() => {
     $('#ok-button').on('click', selectUsers);
 
     $("#save-rules-button").on('click', saveRules);
+
+    $("#check-waiter").hide();
 });
 
 /////////////////////////////
 // test
 /////////////////////////////
 
-var Generate = function (G) {
+var Generate = function (G, ResultCallback) {
     console.log(G);
 
-    // buld nodes
-    var jg = new JGraph(Object.keys(G));
-    // build edges
+    var nodes = Object.keys(G);
+    var arrows = new Map();
     Object.entries(G).forEach(([n, edges]) => {
-        jg.arrows.set(n, edges);
+        arrows.set(n, edges);
     });
 
-    var ccc = jg.findCircuits(c => {
-        return c.length == jg.nodes.length;
-    });
-
-    // test
-    var bad = [];
-    for(var x = 0; x < ccc.length; x++) {
-        var c = ccc[x];
-        var U = c[0];
-        for(var y = 1; y < c.length; y++) {
-            if (!jg.arrows.get(U).includes(c[y])) {
-                bad.push(x);
-                break;
-            }
-            U = c[y];
-        }
-        if (!jg.arrows.get(U).includes(c[0])) {
-            bad.push(x);
-            continue;
-        }
-    }
-    
-    var result = ccc.filter((e, idx) => {
-        return !bad.includes(idx);
-    });
-
-    return result;
+    var johnsonWorker = new Worker('/js/johnson.js');
+    johnsonWorker.addEventListener('message', (e) => {
+        ResultCallback(e);
+    }, false);
+    johnsonWorker.postMessage([
+        nodes,
+        arrows,
+        // limit
+        10000
+    ]);
 };
